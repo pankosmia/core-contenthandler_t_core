@@ -69,7 +69,7 @@ export default function CreatTCProject() {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:19119/temp/bytes", {
+      const response = await fetch("/temp/bytes", {
         method: "POST",
         body: formData,
       });
