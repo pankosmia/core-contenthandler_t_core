@@ -41,9 +41,9 @@
       "en": "Content goes here"
     },
     "create_content_tCore": {
-      "en": "tCore 4 checks",
-      "fr": "Vérifications tCore 4",
-      "es": "Comprobaciones de tCore 4"
+      "en": "tC4 checks",
+      "fr": "Vérifications tC4",
+      "es": "Comprobaciones de tC4"
     },
     "choose_document": {
       "en": "Choose document",
@@ -54,12 +54,12 @@
       "en": "Need at least one local translation project to create an alignment project "
     },
     "project_already_exist": {
-      "fr": "Des vérifications tCore 4 ont déjà cette bible comme source",
-      "en": "There are tCore 4 checks that already have this bible as source"
+      "fr": "Des vérifications tC4 ont déjà cette bible comme source",
+      "en": "There are tC4 checks that already have this bible as source"
     },
     "t_core_project_not_created": {
-      "fr": "les vérifications tCore 4 n'ont pas pu être créées",
-      "en": "tCore 4 checks could not be created"
+      "fr": "les vérifications tC4 n'ont pas pu être créées",
+      "en": "tC4 checks could not be created"
     },
     "from_tC3_project": {
       "fr": "depuis un projet tC3",
