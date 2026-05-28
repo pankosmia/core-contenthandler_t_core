@@ -7,10 +7,13 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.5",
+    "jszip": "^3.10.1",
+    "pankosmia-rcl": "0.1.46",
     "pithekos-lib": "^0.11.4",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
-    "react-router-dom": "^7.9.4"
+    "react-router-dom": "^7.9.4",
+    "use-file-picker": "^2.1.4"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
@@ -46,5 +49,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-darwin-x64": "^4.60.3",
+    "@rollup/rollup-win32-x64-msvc": "^4.60.3"
   }
 }

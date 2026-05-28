@@ -10,16 +10,27 @@
   },
   "endpoints": {
     "x-tcore": {
-      "create_document": [
+      "initDocument": [
         {
           "doc": "Create a document for translationCore",
           "label": "pages:content:new_tcore_content",
-          "url": "/createDocument/tCoreContent"
+          "url": "/createDocument/tCContentRaw?burritoName=%XXX%"
+        }
+      ],
+      "importContent": [
+        {
+          "doc": "Create a document for translationCore",
+          "label": "pages:core-contenthandler_t_core:importTc4",
+          "url": "/createDocument/tCContent"
         }
       ]
     }
   },
   "i18n": {
+    "importTc4": {
+      "en": "Start checking from a USFM book or a tC 3 project",
+      "fr": "Commencer a chercher depuis un livre USFM ou un project tC 3"
+    },
     "title": {
       "en": "core-contenthandler_t_core"
     },
@@ -30,8 +41,9 @@
       "en": "Content goes here"
     },
     "create_content_tCore": {
-      "en": "tCore checks",
-      "fr": "Vérifications tCore"
+      "en": "tC4 checks",
+      "fr": "Vérifications tC4",
+      "es": "Comprobaciones de tC4"
     },
     "choose_document": {
       "en": "Choose document",
@@ -42,12 +54,45 @@
       "en": "Need at least one local translation project to create an alignment project "
     },
     "project_already_exist": {
-      "fr": "Des vérifications tCore ont déjà cette bible comme source",
-      "en": "There are tCore checks that already have this bible as source"
+      "fr": "Des vérifications tC4 ont déjà cette bible comme source",
+      "en": "There are tC4 checks that already have this bible as source"
     },
     "t_core_project_not_created": {
-      "fr": "les vérifications tCore n'ont pas pu être créées",
-      "en": "tCore checks could not be created"
+      "fr": "les vérifications tC4 n'ont pas pu être créées",
+      "en": "tC4 checks could not be created"
+    },
+    "from_tC3_project": {
+      "fr": "depuis un projet tC3",
+      "en": "From tC3 project"
+    },
+    "import": {
+      "en": "Import Project",
+      "fr": "Importer un projet"
+    },
+    "continue": {
+      "en": "Continue",
+      "fr": "Continuer"
+    },
+    "from_local_text_translation": {
+      "en": "From local text translation",
+      "fr": "Depuis un project local"
+    },
+    "from_usfm": {
+      "en": "From USFM",
+      "fr": "Depuis un USFM"
+    },
+    "close": {
+      "en": "Close",
+      "fr": "Fermer"
+    },
+    "required_field": {
+      "en": "* Required fields",
+      "fr": "* Champs obligatoires",
+      "id": "* Data yg diperlukan",
+      "es": "* Campos requeridos"
+    },
+    "new_checks": {
+      "en": "New checks"
     }
   }
 }
