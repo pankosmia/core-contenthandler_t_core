@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { i18nContext, debugContext } from "pankosmia-rcl";
 import { enqueueSnackbar } from "notistack";
 const checkExistingRepo = async (name) => {
-  const response = await getJson("/burrito/metadata/summaries");
+  const response = await getJson("/api/burrito/metadata/summaries");
   const data = await response.json;
 
   // Filter only those with flavor_type = scripture
@@ -45,7 +45,7 @@ export const handleCreate = async (burritoAbr, debugRef, i18nRef) => {
       book_code: "",
     };
     const response = await postJson(
-      "/git/new-tcore-resource",
+      "/api/git/new-tcore-resource",
       JSON.stringify(payload),
       debugRef.current,
     );
@@ -79,7 +79,7 @@ export default function NewTCoreContent() {
         let isOk = await handleCreate(burritoName, debugRef, i18nRef);
       }
       await postEmptyJson(
-        `/app-state/current-project/_local_/_local_/${burritoName.toLowerCase()}_tcchecks`,
+        `/api/app-state/current-project/_local_/_local_/${burritoName.toLowerCase()}_tcchecks`,
       );
 
       window.location.href = `/clients/uw-client-checks#`;
