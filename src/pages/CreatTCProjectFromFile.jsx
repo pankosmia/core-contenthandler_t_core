@@ -47,7 +47,7 @@ export default function CreatTCProjectFromFile() {
 
     async function extractManifest() {
       try {
-        const res = await fetch(`/temp/bytes/${fileUUID}`);
+        const res = await fetch(`/api/temp/bytes/${fileUUID}`);
         const arrayBuffer = await res.arrayBuffer();
         const zip = await JSZip.loadAsync(arrayBuffer);
 
@@ -103,16 +103,16 @@ export default function CreatTCProjectFromFile() {
       add_cv: null,
     };
     let response = await postJson(
-      "/git/new-text-translation",
+      "/api/git/new-text-translation",
       JSON.stringify(payload),
       debugRef.current,
     );
     if (response.ok) {
       if (typeDocument === "usfm") {
-        const res = await fetch(`/temp/bytes/${fileUUID}`);
+        const res = await fetch(`/api/temp/bytes/${fileUUID}`);
         const fileText = await res.text();
         response = await postJson(
-          `/burrito/ingredient/raw/_local_/_local_/${projectAbr}?ipath=${`${fileName}`}&update_ingredients`,
+          `/api/burrito/ingredient/raw/_local_/_local_/${projectAbr}?ipath=${`${fileName}`}&update_ingredients`,
           JSON.stringify({ payload: fileText }),
           debugRef.current,
         );
@@ -122,7 +122,7 @@ export default function CreatTCProjectFromFile() {
         let isOk = await handleCreate(projectAbr, debugRef, i18nRef);
         if (isOk) {
           await postEmptyJson(
-            `/app-state/current-project/_local_/_local_/${projectAbr.toLowerCase()}_tcchecks`,
+            `/api/app-state/current-project/_local_/_local_/${projectAbr.toLowerCase()}_tcchecks`,
           );
           window.location.href = `/clients/uw-client-checks#?fileName=${fileName}&uuid=${fileUUID}`;
         }
