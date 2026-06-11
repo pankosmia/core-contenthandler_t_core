@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { DialogContent } from "@mui/material";
+import { Box, CircularProgress, DialogContent } from "@mui/material";
 import { postJson, doI18n, getJson, postEmptyJson } from "pithekos-lib";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { i18nContext, debugContext } from "pankosmia-rcl";
@@ -96,5 +96,17 @@ export default function NewTCoreContent() {
     creatOrGo();
   }, []);
 
-  return <></>;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100vh",
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  );
 }
