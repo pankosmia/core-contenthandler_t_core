@@ -4,6 +4,7 @@ import { postJson, doI18n, getJson, postEmptyJson } from "pithekos-lib";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { i18nContext, debugContext } from "pankosmia-rcl";
 import { enqueueSnackbar } from "notistack";
+
 const checkExistingRepo = async (name) => {
   const response = await getJson("/api/burrito/metadata/summaries");
   const data = await response.json;
@@ -13,7 +14,6 @@ const checkExistingRepo = async (name) => {
     path: key,
     ...value,
   }));
-
   const scriptures = burritoArray.find(
     (item) => item?.flavor === "x-tcore" && item?.abbreviation === name,
   );
@@ -24,9 +24,7 @@ const checkExistingRepo = async (name) => {
   }
   return false;
 };
-// {
 
-//             }
 export const handleCreate = async (burritoAbr, debugRef, i18nRef) => {
   let isHere = await checkExistingRepo(`${burritoAbr.toLowerCase()}_tcchecks`);
   if (isHere) {
@@ -40,8 +38,19 @@ export const handleCreate = async (burritoAbr, debugRef, i18nRef) => {
       },
     );
   } else {
+    const responseS = await getJson("/api/burrito/metadata/summaries");
+    const burritoArray = Object.entries(responseS.json).map(([key, value]) => ({
+      path: key,
+      ...value,
+    }));
+
+    const scripture = burritoArray.find(
+      (item) =>
+        item?.path.includes("_local_/_local_") &&
+        item?.abbreviation === burritoAbr,
+    );
     const payload = {
-      usfm_repo_path: `_local_/_local_/${burritoAbr}`,
+      usfm_repo_path: scripture.path,
       book_code: "",
     };
     const response = await postJson(
@@ -75,7 +84,7 @@ export default function NewTCoreContent() {
   useEffect(() => {
     async function creatOrGo() {
       //toDo selectedBurrito = ??
-      if (!(await checkExistingRepo(burritoName))) {
+      if (!(await checkExistingRepo(`${burritoName.toLowerCase()}_tcchecks`))) {
         let isOk = await handleCreate(burritoName, debugRef, i18nRef);
       }
       await postEmptyJson(
