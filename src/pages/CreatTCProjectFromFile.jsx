@@ -14,6 +14,9 @@ import { handleCreate } from "./tCoreContent";
 import { useNavigate } from "react-router-dom";
 
 import JSZip from "jszip";
+const isValidProjectName = (value) => /^[a-zA-Z0-9 _-]*$/.test(value);
+
+const isValidProjectAbr = (value) => /^[a-zA-Z0-9_-]*$/.test(value);
 
 export default function CreatTCProjectFromFile() {
   const { i18nRef } = useContext(i18nContext);
@@ -31,6 +34,9 @@ export default function CreatTCProjectFromFile() {
   });
   const [languageIsValid, setLanguageIsValid] = useState(true);
   const [versification, setVersification] = useState("eng");
+
+  const [projectNameError, setProjectNameError] = useState(false);
+  const [projectAbrError, setProjectAbrError] = useState(false);
 
   const typeDocument = useMemo(() => {
     if (!fileName) return null;
@@ -89,6 +95,11 @@ export default function CreatTCProjectFromFile() {
   }, [fileName, typeDocument]);
 
   async function creatTextTranslation() {
+    if (!isValidProjectName(projectName) || !isValidProjectAbr(projectAbr)) {
+      setProjectNameError(!isValidProjectName(projectName));
+      setProjectAbrError(!isValidProjectAbr(projectAbr));
+      return;
+    }
     const payload = {
       content_name: projectName,
       content_abbr: projectAbr,
@@ -149,7 +160,17 @@ export default function CreatTCProjectFromFile() {
               fullWidth
               label="Project Name"
               value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setProjectName(value);
+                setProjectNameError(!isValidProjectName(value));
+              }}
+              error={projectNameError}
+              helperText={
+                projectNameError
+                  ? "Only letters, numbers, spaces, - and _ are allowed"
+                  : ""
+              }
               margin="dense"
             />
           </Box>
@@ -159,7 +180,17 @@ export default function CreatTCProjectFromFile() {
               fullWidth
               label="Project Abbreviation"
               value={projectAbr}
-              onChange={(e) => setProjectAbr(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setProjectAbr(value);
+                setProjectAbrError(!isValidProjectAbr(value));
+              }}
+              error={projectAbrError}
+              helperText={
+                projectAbrError
+                  ? "Only letters, numbers, - and _ are allowed"
+                  : ""
+              }
               margin="dense"
             />
           </Box>
@@ -185,6 +216,9 @@ export default function CreatTCProjectFromFile() {
           actionFn={() => {
             creatTextTranslation();
           }}
+          isDisabled={
+            !isValidProjectName(projectName) || !isValidProjectAbr(projectAbr)
+          }
           actionLabel={doI18n(
             "pages:core-contenthandler_t_core:continue",
             i18nRef.current,
