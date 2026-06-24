@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState, useEffect } from "react";
-import { Button, DialogContent, Box, TextField } from "@mui/material";
+import { DialogContent, Box, TextField } from "@mui/material";
 import {
   PanDialog,
   PanDialogActions,
@@ -9,7 +9,8 @@ import {
   debugContext,
 } from "pankosmia-rcl";
 import { useSearchParams } from "react-router-dom";
-import { doI18n, postEmptyJson, postJson } from "pithekos-lib";
+import { postEmptyJson, postJson } from "pankosmia-lib/http";
+import { doI18n } from "pankosmia-lib/i18n";
 import { handleCreate } from "./tCoreContent";
 import { useNavigate } from "react-router-dom";
 
