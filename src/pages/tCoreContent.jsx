@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from "react";
-import { Box, CircularProgress, DialogContent } from "@mui/material";
-import { postJson, doI18n, getJson, postEmptyJson } from "pithekos-lib";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useContext } from "react";
+import { Box, CircularProgress } from "@mui/material";
+import { postJson, getJson, postEmptyJson } from "pankosmia-lib/http";
+import { doI18n } from "pankosmia-lib/i18n";
+import { useSearchParams } from "react-router-dom";
 import { i18nContext, debugContext } from "pankosmia-rcl";
 import { enqueueSnackbar } from "notistack";
 

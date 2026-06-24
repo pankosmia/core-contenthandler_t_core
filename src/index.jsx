@@ -12,7 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import { useContext, useEffect, useMemo, useState } from "react";
-import { getAndSetJson } from "pithekos-lib";
+import { getAndSetJson } from "pankosmia-lib/http";
 
 import { SnackbarProvider, MaterialDesignContent } from "notistack";
 import { styled } from "@mui/material/styles";
