@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState, useEffect } from "react";
-import { Button, DialogContent, Box, TextField } from "@mui/material";
+import { DialogContent, Box, TextField } from "@mui/material";
 import {
   PanDialog,
   PanDialogActions,
@@ -9,11 +9,15 @@ import {
   debugContext,
 } from "pankosmia-rcl";
 import { useSearchParams } from "react-router-dom";
-import { doI18n, postEmptyJson, postJson } from "pithekos-lib";
+import { postEmptyJson, postJson } from "pankosmia-lib/http";
+import { doI18n } from "pankosmia-lib/i18n";
 import { handleCreate } from "./tCoreContent";
 import { useNavigate } from "react-router-dom";
 
 import JSZip from "jszip";
+const isValidProjectName = (value) => /^[a-zA-Z0-9 _-]*$/.test(value);
+
+const isValidProjectAbr = (value) => /^[a-zA-Z0-9_-]*$/.test(value);
 
 export default function CreatTCProjectFromFile() {
   const { i18nRef } = useContext(i18nContext);
@@ -32,6 +36,9 @@ export default function CreatTCProjectFromFile() {
   const [languageIsValid, setLanguageIsValid] = useState(true);
   const [versification, setVersification] = useState("eng");
 
+  const [projectNameError, setProjectNameError] = useState(false);
+  const [projectAbrError, setProjectAbrError] = useState(false);
+
   const typeDocument = useMemo(() => {
     if (!fileName) return null;
     return fileName.endsWith(".zip") ? "zip" : "usfm";
@@ -47,7 +54,7 @@ export default function CreatTCProjectFromFile() {
 
     async function extractManifest() {
       try {
-        const res = await fetch(`/temp/bytes/${fileUUID}`);
+        const res = await fetch(`/api/temp/bytes/${fileUUID}`);
         const arrayBuffer = await res.arrayBuffer();
         const zip = await JSZip.loadAsync(arrayBuffer);
 
@@ -89,6 +96,11 @@ export default function CreatTCProjectFromFile() {
   }, [fileName, typeDocument]);
 
   async function creatTextTranslation() {
+    if (!isValidProjectName(projectName) || !isValidProjectAbr(projectAbr)) {
+      setProjectNameError(!isValidProjectName(projectName));
+      setProjectAbrError(!isValidProjectAbr(projectAbr));
+      return;
+    }
     const payload = {
       content_name: projectName,
       content_abbr: projectAbr,
@@ -103,16 +115,16 @@ export default function CreatTCProjectFromFile() {
       add_cv: null,
     };
     let response = await postJson(
-      "/git/new-text-translation",
+      "/api/git/new-text-translation",
       JSON.stringify(payload),
       debugRef.current,
     );
     if (response.ok) {
       if (typeDocument === "usfm") {
-        const res = await fetch(`/temp/bytes/${fileUUID}`);
+        const res = await fetch(`/api/temp/bytes/${fileUUID}`);
         const fileText = await res.text();
         response = await postJson(
-          `/burrito/ingredient/raw/_local_/_local_/${projectAbr}?ipath=${`${fileName}`}&update_ingredients`,
+          `/api/burrito/ingredient/raw/_local_/_local_/${projectAbr}?ipath=${`${fileName}`}&update_ingredients`,
           JSON.stringify({ payload: fileText }),
           debugRef.current,
         );
@@ -122,7 +134,7 @@ export default function CreatTCProjectFromFile() {
         let isOk = await handleCreate(projectAbr, debugRef, i18nRef);
         if (isOk) {
           await postEmptyJson(
-            `/app-state/current-project/_local_/_local_/${projectAbr.toLowerCase()}_tcchecks`,
+            `/api/app-state/current-project/_local_/_local_/${projectAbr.toLowerCase()}_tcchecks`,
           );
           window.location.href = `/clients/uw-client-checks#?fileName=${fileName}&uuid=${fileUUID}`;
         }
@@ -149,7 +161,17 @@ export default function CreatTCProjectFromFile() {
               fullWidth
               label="Project Name"
               value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setProjectName(value);
+                setProjectNameError(!isValidProjectName(value));
+              }}
+              error={projectNameError}
+              helperText={
+                projectNameError
+                  ? "Only letters, numbers, spaces, - and _ are allowed"
+                  : ""
+              }
               margin="dense"
             />
           </Box>
@@ -159,7 +181,17 @@ export default function CreatTCProjectFromFile() {
               fullWidth
               label="Project Abbreviation"
               value={projectAbr}
-              onChange={(e) => setProjectAbr(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setProjectAbr(value);
+                setProjectAbrError(!isValidProjectAbr(value));
+              }}
+              error={projectAbrError}
+              helperText={
+                projectAbrError
+                  ? "Only letters, numbers, - and _ are allowed"
+                  : ""
+              }
               margin="dense"
             />
           </Box>
@@ -185,6 +217,9 @@ export default function CreatTCProjectFromFile() {
           actionFn={() => {
             creatTextTranslation();
           }}
+          isDisabled={
+            !isValidProjectName(projectName) || !isValidProjectAbr(projectAbr)
+          }
           actionLabel={doI18n(
             "pages:core-contenthandler_t_core:continue",
             i18nRef.current,

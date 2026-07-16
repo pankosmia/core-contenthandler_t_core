@@ -1,7 +1,7 @@
 import { PanDialog, PanDialogActions, i18nContext } from "pankosmia-rcl";
 import { Button, DialogContent, Box, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { doI18n } from "pithekos-lib";
+import { doI18n } from "pankosmia-lib/i18n";
 import { useNavigate } from "react-router-dom";
 import { useFilePicker } from "use-file-picker";
 
@@ -69,7 +69,7 @@ export default function CreatTCProject() {
     }
 
     try {
-      const response = await fetch("/temp/bytes", {
+      const response = await fetch("/api/temp/bytes", {
         method: "POST",
         body: formData,
       });

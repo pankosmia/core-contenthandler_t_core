@@ -1,11 +1,13 @@
-import { useState, useEffect, useContext } from "react";
-import { DialogContent } from "@mui/material";
-import { postJson, doI18n, getJson, postEmptyJson } from "pithekos-lib";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useContext } from "react";
+import { Box, CircularProgress } from "@mui/material";
+import { postJson, getJson, postEmptyJson } from "pankosmia-lib/http";
+import { doI18n } from "pankosmia-lib/i18n";
+import { useSearchParams } from "react-router-dom";
 import { i18nContext, debugContext } from "pankosmia-rcl";
 import { enqueueSnackbar } from "notistack";
+
 const checkExistingRepo = async (name) => {
-  const response = await getJson("/burrito/metadata/summaries");
+  const response = await getJson("/api/burrito/metadata/summaries");
   const data = await response.json;
 
   // Filter only those with flavor_type = scripture
@@ -13,7 +15,6 @@ const checkExistingRepo = async (name) => {
     path: key,
     ...value,
   }));
-
   const scriptures = burritoArray.find(
     (item) => item?.flavor === "x-tcore" && item?.abbreviation === name,
   );
@@ -24,9 +25,7 @@ const checkExistingRepo = async (name) => {
   }
   return false;
 };
-// {
 
-//             }
 export const handleCreate = async (burritoAbr, debugRef, i18nRef) => {
   let isHere = await checkExistingRepo(`${burritoAbr.toLowerCase()}_tcchecks`);
   if (isHere) {
@@ -40,12 +39,23 @@ export const handleCreate = async (burritoAbr, debugRef, i18nRef) => {
       },
     );
   } else {
+    const responseS = await getJson("/api/burrito/metadata/summaries");
+    const burritoArray = Object.entries(responseS.json).map(([key, value]) => ({
+      path: key,
+      ...value,
+    }));
+
+    const scripture = burritoArray.find(
+      (item) =>
+        item?.path.includes("_local_/_local_") &&
+        item?.abbreviation === burritoAbr,
+    );
     const payload = {
-      usfm_repo_path: `_local_/_local_/${burritoAbr}`,
+      usfm_repo_path: scripture.path,
       book_code: "",
     };
     const response = await postJson(
-      "/git/new-tcore-resource",
+      "/api/git/new-tcore-resource",
       JSON.stringify(payload),
       debugRef.current,
     );
@@ -75,11 +85,11 @@ export default function NewTCoreContent() {
   useEffect(() => {
     async function creatOrGo() {
       //toDo selectedBurrito = ??
-      if (!(await checkExistingRepo(burritoName))) {
+      if (!(await checkExistingRepo(`${burritoName.toLowerCase()}_tcchecks`))) {
         let isOk = await handleCreate(burritoName, debugRef, i18nRef);
       }
       await postEmptyJson(
-        `/app-state/current-project/_local_/_local_/${burritoName.toLowerCase()}_tcchecks`,
+        `/api/app-state/current-project/_local_/_local_/${burritoName.toLowerCase()}_tcchecks`,
       );
 
       window.location.href = `/clients/uw-client-checks#`;
@@ -87,5 +97,17 @@ export default function NewTCoreContent() {
     creatOrGo();
   }, []);
 
-  return <></>;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100vh",
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  );
 }
